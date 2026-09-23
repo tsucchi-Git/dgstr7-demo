@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel='stylesheet' href='css/menu.css'/>
+  <title>Stamp Note</title>
+</head>
+<style>
+  table{
+    width:100%;
+    table-layout:fixed;
+  }
+  .table-img{
+    width: 90%;
+    text-align: center;
+    margin-top: 3px;
+    vertical-align: middle; /* 縦方向の中央揃え */
+    display: flex;          /* ブラウザSafari対策：画像の縦伸び防止 */
+    align-items: flex-start;  /* ブラウザSafari対策：画像の縦伸び防止 */
+    cursor: pointer;        /*カーソルを近づけるとポインタ表示になる */
+  }
+  .table-text{
+    text-align: center; /* 横方向の中央揃え */
+    vertical-align: middle; /* 縦方向の中央揃え */
+    font-size: 65%;
+    overflow-wrap: break-word;
+    font-family: Arial;
+  }
+  .page-title{
+    margin-top: 8%;
+    text-align: center; /* 横方向の中央揃え */
+    font-size: 120%;
+    font-family: Arial;
+  }
+  .text-nickname{
+    margin-top: 8px;
+    margin-bottom: -1px;
+    text-align: left;
+    font-family: Arial;
+  }  
+  .text-end{
+    font-size: 80%;
+    text-align: left;
+    color:blue;
+    font-family: Arial;
+  }
+  .form{
+    padding: 10px;
+    border: 1px solid #333;
+    background: #c9f506;
+    font-size: 70%;
+  }
+  .text-user{
+    margin-top: 7px;
+    text-align: right;      /* テキストを右寄せ */
+    padding-right: 15px;    /* 右端から10px空ける */
+    font-size:85%;
+    line-height: 0%;
+    font-family: "Times New Roman";
+  }
+</style>
+<body>
+  <nav>
+    <ul>
+    <li class=”current”><a href='home.html'>ホーム</a></li>
+    <li><a href='spotlist.html'>リスト</a></li>
+    <li><a href='howtoplay.html'>遊び方</a></li>
+    <!-- <li><a href=”#”>Blog</a></li> -->
+    </ul>
+   </nav>
+  <div id="title" class="page-title"></div>
+  <p id="nickname" class="text-nickname"></p>
+  <p id="user_id" class="text-user"></p>
+  <form id="form_nickname" class="form">
+    <lable>スタンプ帳にニックネームが表示されます。<br>好きな名前を入力してください。<br><br></lable>
+    <lable for "textform">ニックネーム：</lable>
+    <input type="text" id="name">
+    <button id="button">実行</button>
+    <lable for "textform"><br>※３～１０文字で入力してください。<br>※ニックネームは途中で変更できません。</lable>
+  </form>
+  <table border="1" id="table_display">
+    <tbody>
+      <tr >
+        <td>
+          <table>
+            <tr><td class="table-img"><div><img id="image1" width="60%" height="60%" ></div></td></tr>
+            <tr><td id="spot1" class="table-text"></td></tr>
+          </table>
+         </td>
+         <td>
+          <table>
+            <tr><td class="table-img"><div><img id="image2" width="60%" height="60%" ></div></td></tr>
+            <tr><td id="spot2" class="table-text"></td></tr>
+          </table>
+         </td>
+         <td>
+          <table>
+            <tr><td class="table-img"><div><img id="image3" width="60%" height="60%" ></div></td></tr>
+            <tr><td id="spot3" class="table-text"></td></tr>
+          </table>
+         </td>
+      </tr>
+      <tr >
+        <td>
+          <table>
+            <tr><td class="table-img"><div><img id="image4" width="60%" height="60%" ></div></td></tr>
+            <tr><td id="spot4" class="table-text"></td></tr>
+          </table>
+         </td>
+        <td>
+          <table>
+            <tr><td class="table-img"><div><img id="image5" width="60%" height="60%" ></div></td></tr>
+            <tr><td id="spot5" class="table-text"></td></tr>
+          </table>
+         </td>
+        <td>
+          <table>
+            <tr><td class="table-img"><div><img id="image6" width="60%" height="60%" ></div></td></tr>
+            <tr><td id="spot6" class="table-text"></td></tr>
+          </table>
+         </td>
+      </tr>
+    </tbody>
+  </table> 
+  <p class="text-end" id="appendix">※オレンジ色のみかんのスポットは訪問済みです。</p>
+</body>
+  <script>
+      var area_no;
+      var _nickname;  //ニックネームの文字列
+      var key_nickname; //ニックネームのローカルストレージのキーコード
+      var _count; //獲得スタンプ数
+      var _userid;  //ユーザーidの文字列
+      var user;    
+      var key_userid; //ユーザーidのローカルストレージのキーコード
+      if(window.localStorage){
+          //エリア番号の読み取り
+　　      area_no=localStorage.getItem('area_no%');
+          //ニックネームとユーザーidのローカルストレージのキーコードを作成
+          key_nickname="nick_name%" + area_no;
+          key_userid="user_id%" + area_no;
+    　    //ローカルストレージからキー「selected-spot%地域番号」で基礎データを読み込み配列arrayに格納
+          //※※ニックネームとユーザーidのローカルストレージを削除
+              //localStorage.removeItem(key_nickname);
+              //localStorage.removeItem(key_userid);
+          //基礎データのローカルストレージのキー
+      　  key_all="all_basic_data%" + area_no;
+          //ローカルストレージの基礎データを取得→配列名arrayに格納、キーは「all_basic_data%地域番号」
+          let json=localStorage.getItem(key_all);        　
+          array=JSON.parse(json);
+          //ローカルストレージからキー「vsit_data」で基礎データを読み込み配列visit_ynに格納
+          key_visit="visit_data%" + area_no;  
+          let json_visit=localStorage.getItem(key_visit);
+          visit_yn=JSON.parse(json_visit); //[-1,-1,-1,-1,-1,-1]
+          let _count=0
+          //タイトル
+          var title_text=document.getElementById("title");
+          if(area_no==1){
+              var area_text="～紀の川流域～"; 
+          } else if(area_no==2){ 
+              var area_text="～有田川流域～"; 
+          } else if(area_no==3){ 
+              var area_text="～日高川流域～"; 
+          } else if(area_no==4){ 
+              var area_text="～田辺市・西牟婁郡～"; 
+          } else if(area_no==5){ 
+              var area_text="～新宮市・東牟婁郡～"; 
+          } else if(area_no==7){ 
+              var area_text="～吹井ぼうさい散歩編～"; 
+          } else{ 
+              var area_text=""; 
+          }
+          title_text.textContent="スタンプ帳" + area_text;
+          //各スポットの表示
+          for(i=0;i<array.length;i++){
+              i1=i+1;
+              var e_spot=document.getElementById("spot" +i1);
+              e_spot.textContent=array[i].name;
+              //htmlで記述したTableの画像セルのID→同セルにe_imgというタグをつける
+              var e_img=document.getElementById("image" +i1);
+              //スポットが訪問済みか否かで、表示するスタンプを変える
+              if(visit_yn[i]>0){ 
+                  e_img.src="icon/stamp_good.png" 
+                  _count=_count+1
+              }
+              else{
+                  e_img.src="icon/stamp_ng.png"
+              }
+              //画像にクリックイベントを付加
+                    e_img.addEventListener('click', function(event){
+                        //クリックされた画像のファイル名を調べる
+                        const clickedElement = event.target;
+                        var str= clickedElement.id
+                        let str_search = str.indexOf('image') ;
+                        let str_text=str.substring(str_search);
+                        let str_id_no=str_text.replace("image","")
+                        spot_jamp_detail_from_stampnote(1,str_id_no,array)
+                    });
+              //スポットの名称にクリックイベントを付加
+                    e_spot.addEventListener('click', function(event){
+                        //クリックされた画像のファイル名を調べる
+                        const clickedElement = event.target;
+                        var str= clickedElement.id
+                        let str_search = str.indexOf('spot') ;
+                        let str_text=str.substring(str_search);
+                        let str_id_no=str_text.replace("spot","")
+                        spot_jamp_detail_from_stampnote(2,str_id_no,array)
+　                   });
+
+            }
+            if (localStorage.getItem(key_nickname) === null || localStorage.getItem(key_userid) === null) {
+                if (localStorage.getItem(key_nickname) === null){
+                  　//ニックネームの入力formを表示
+                    prompt_nickname(_count);
+                }
+                if (localStorage.getItem(key_userid) === null){
+                  　//ユーザーidの作成の関数の呼び出しと表示
+                    get_userid(_count);
+                }
+            } else {
+                //入力フォームを非表示にする。
+                document.getElementById("form_nickname").style.display='none';
+                //ローカルストレージからニックネームの読み込み
+                _nickname=localStorage.getItem(key_nickname);
+                //ユーザーidの読み込み
+                _userid=localStorage.getItem(key_userid);
+                user=document.getElementById("user_id");
+                user.textContent=_userid;
+                //ニックネーム、利用者番号、スタンプ一覧表、注釈を表示にする
+                document.getElementById("nickname").style.display='block';
+                document.getElementById("table_display").style.display='block';
+                document.getElementById("appendix").style.display='block';
+                document.getElementById("user_id").style.display='block';
+                document.getElementById("nickname").textContent=_nickname + " さん >>> スタンプ：" + _count +' 個';
+            }
+
+          //画像がクリックされたときに発生するイベント
+          function spot_jamp_detail_from_stampnote(flag_element,str_target,markerList){
+              let total_spot=markerList.length  
+              let k=str_target-1
+              //当該スポットのデータをウェブストレージに保存して、詳細ページに遷移
+              let s_id=markerList[k].id              //スポットのID変数に代入
+              let s_lat=markerList[k].lat              //スポットの北緯を変数に代入
+              let s_lng=markerList[k].lng              //スポットの東経を変数に代入
+              let s_title=markerList[k].name;          //スポットの名称を変数に代入
+              let s_img=markerList[k].file;            //スポットの画像ファイル名を変数に代入
+              let s_address=markerList[k].address;        //スポットの住所を変数に代入
+              let s_address_detail=markerList[k].detail; //スポットの場所の詳細を変数に代入
+              let s_era=markerList[k].era;            //スポットの年代を変数に代入
+              let s_explanation=markerList[k].exp;    //スポットに関する説明を変数に代入
+              let s_yesno=markerList[k].yn;         //スポットの訪問の有無を変数に代入
+              let s_flag=-1 //スポットの詳細を読み込む際：チェックインのページから→s_flag=1、スタンプ帳とスポットリストのページから→s_flag=-1
+              //詳細ボタンがクリックされたときに、当該スポットのデータの一部を配列に格納
+              let spot_array=[s_id,s_lat,s_lng,s_title,s_img,s_address,s_address_detail,s_era,s_explanation,s_yesno,s_flag];
+              //ローカルストレージに「selected-spot%地域番号」のキーで選択されたスポットのデータ配列を保存
+              //配列をJSONデータに返還し、json_stringという変数に一括代入
+                key_select="selected_spot%" + area_no;
+                let json_string=JSON.stringify(spot_array);   
+                localStorage.setItem(key_select,json_string);
+              //詳細のページに遷移
+              window.location.href ='detail.html'
+            }        
+      }
+      else
+      {
+            alert('ローカルストレージは使えません');
+      }
+      //ニックネーム入力用のフォーム
+      function prompt_nickname(_count){
+        //ニックネーム、利用者番号、スタンプ一覧表、注釈を非表示にする
+        document.getElementById("nickname").style.display='none';
+        document.getElementById("user_id").style.display='none';
+        document.getElementById("table_display").style.display='none';
+        document.getElementById("appendix").style.display='none';
+        //インプットボックスをクリアする
+        document.getElementById("name").value = "";
+        //ニックネームの入力フォームを表示する
+        document.getElementById("form_nickname").style.display='block';
+        //実行ボタンがクリックされたときに発生するイベントを記述
+          var button=document.getElementById("button");
+          button.addEventListener("click",function(e){
+                e.preventDefault();
+                _nickname=document.getElementById("name").value;
+                if(_nickname.length<3){
+                  alert("ニックネームは文字数は３文字以上にしてください。");
+                  document.getElementById("name").value="";
+                  return; //処理を中断
+                }
+                if(_nickname.length>10){
+                  alert("ニックネームは文字数は１０文字以下にしてください。");
+                  document.getElementById("name").value="";
+                  return; //処理を中断
+                }
+                //入力した文字列の先頭が半角または全角のスペースになっていなことをチェックする
+                let strSearch1 = ' ';  // 探す文字（半角のスペース）
+                let strSearch2 = '　';  // 探す文字（全角のスペース）
+                if(_nickname[0] == strSearch1 || _nickname[0] == strSearch2){
+                  alert("先頭の文字が半角スペースまたは全角スペースになっています。再入力してください。");
+                  document.getElementById("name").value="";
+                  return; //処理を中断
+                }
+                //入力した文字列の最後が半角または全角のスペースになっていなことをチェックする
+                if(_nickname[_nickname.length-1] == strSearch1 || _nickname[_nickname.length-1] == strSearch2){
+                  alert("最後の文字が半角スペースまたは全角スペースになっています。再入力してください。");
+                  document.getElementById("name").value="";
+                  return; //処理を中断
+                }else{
+                  //ニックネームが規定通りに設定された場合の処理
+                    //入力フォームを非表示にする。
+                    document.getElementById("form_nickname").style.display='none';
+                    //ニックネーム、スタンプ一覧表、ユーザーid、注釈を表示にする
+                    document.getElementById("nickname").style.display='block';
+                    document.getElementById("table_display").style.display='block';
+                    document.getElementById("appendix").style.display='block';
+                    //ユーザーidが設定されている場合は、これを表示する。
+                    if(localStorage.getItem(key_userid) != null){
+                      _userid=localStorage.getItem(key_userid)
+                      document.getElementById("user_id").textContent=_userid
+                      if(document.getElementById("form_nickname").style.display='none'){
+                          document.getElementById("user_id").style.display='block';
+                      }
+                    }
+                    document.getElementById("nickname").textContent=_nickname + " さん >>> スタンプ：" + _count +' 個';
+                    //ニックネームをキーを「nick_name%5」としてローカルストレージに保存する。
+                    if(window.localStorage){
+                        localStorage.setItem(key_nickname,_nickname);
+                    }
+                }
+          })
+      }
+      //ユーザーidを作成
+      function get_userid(_count){
+        var _userid;
+        var array_alphabet=new Array(5);
+        var array_today= new Array(5);
+        const today = new Date(); // 現在の日付を取得
+        const year = today.getFullYear(); // 年を取得
+        const year1=year-2000;
+        array_today[0]=year1             //年の最後の2文字を取得
+        const month = String(today.getMonth() + 1).padStart(2, '0'); //月を2桁で取得（0から始まるため+1）
+        array_today[1]=month;
+        const day = String(today.getDate()).padStart(2, '0'); //日を2桁で取得
+        array_today[2]=day;
+        const hour=String(today.getHours()).padStart(2, '0');//時間を2桁で取得
+        array_today[3]=hour;
+        const minute=String(today.getMinutes()).padStart(2, '0');//分を2桁で取得
+        array_today[4]=minute;
+        const second=String(today.getSeconds()).padStart(2, '0');//秒を2桁で取得
+        array_today[5]=second;
+        //ニックネームが設定されている場合は、入力フォームを非表示にし、ニックネームを表示する。
+        if (localStorage.getItem(key_nickname) != null){
+          document.getElementById("form_nickname").style.display='none';
+          _nickname=localStorage.getItem(key_nickname);
+          document.getElementById("nickname").textContent=_nickname + " さん >>> スタンプ：" + _count +' 個';
+          document.getElementById("nickname").style.display='block';
+        }
+        //アルファベットのランダム取得
+        get_alphabet(array_alphabet);
+        //idの作成
+        _userid=array_alphabet[0]+String(array_today[3])+String(array_today[4])+String(array_today[5]);
+        _userid=_userid+array_alphabet[1]+String(array_today[0])+String(array_today[1])+String(array_today[2]);
+        _userid=_userid+array_alphabet[2]
+        //ユーザーidの表示
+        user=document.getElementById("user_id");
+        user.textContent=_userid;
+        // if(document.getElementById("form_nickname").style.display='none'){
+        //     user.style.display='block';
+        // }
+        //ユーザーidをキーを「user_id%5」としてローカルストレージに保存する。
+        if(window.localStorage){
+            localStorage.setItem(key_userid,_userid);
+        }
+      }
+      //ランダムなアルファベットを発生させ、それを配列に格納する
+      function get_alphabet(array_alphabet1){
+        const min=5;
+        const max=26;
+        var _random;
+        var _alphabet;
+        var array_alphabet1 ;
+        for (let i = 0; i < 5; i++) {
+          //乱数の発生(1～26）
+          _random=Math.random()*(max-min)+min;
+          //数字をふぁるふぁ別途に変換
+          _alphabet=String.fromCharCode(64 + _random); // ASCIIコードを使用
+          array_alphabet1[i]=_alphabet
+        }
+      }
+
+    
+  </script> 
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

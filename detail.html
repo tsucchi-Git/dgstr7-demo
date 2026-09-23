@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel='stylesheet' href='css/menu.css'/>
+  <title>Detail</title>
+</head>
+<style>
+  .page-title{
+    margin-top:8%;
+    text-align: center;
+    font-family: Arial;
+  }
+  table{
+    width:100%;
+    table-layout:fixed;
+    margin-top:10px;
+    border:0px;
+    font-family: Arial;
+  }
+  .table-img{
+    text-align: center; /* 横方向の中央揃え */
+    vertical-align: middle; /* 縦方向の中央揃え */
+    width: 70%;
+    max-height: 20%;
+    margin-left:15%;
+  }  
+  .table-text{
+    text-align: left; /* 横方向の中央揃え */
+    vertical-align: middle; /* 縦方向の中央揃え */
+    font-size: 70%;
+    overflow-wrap: break-word;
+    width:100%;
+  }
+  .explanation{
+    margin-top:5px;
+    text-align: left; /* 横方向の中央揃え */
+    font-size: 65%;
+    width:100%;
+    height:160px;
+    border:1px solid #000;
+    overflow-y:scroll;
+    font-family: Arial;
+  }
+  .img-tomap{
+    margin-top:5px;
+    text-align: center; /* 横方向の中央揃え */
+    cursor:pointer;
+  }
+  /* 音声再生ボタンとビデオ再生ボタンを横並びにする */
+  .image-container{
+      display: flex;
+      justify-content: center; /* 中央寄せ */
+      gap: 70px;               /* 画像間の間隔 */
+  }
+  .image-container img{
+      width: 50px;            /* 画像サイズ */
+      height: auto;
+  }  
+  /* 背景（音声再生、ビデオ再生共通）*/
+  .modal{
+      display:none;
+      position:fixed;
+      z-index:1000;
+      left:0;
+      top:0;
+      width:100%;
+      height:100%;
+      background:rgba(0,0,0,0.5);
+  }
+  /* 音声再生用 */
+  /* モーダル背景 */
+  .modal-content{
+      background:white;
+      width:320px;
+      margin:75% auto;
+      padding:20px;
+      border-radius:10px;
+      box-shadow:0 0 10px rgba(0,0,0,0.3);
+  }
+  .audio-btn{
+    width:80px;
+    height:60px;
+    text-align:center;
+    line-height:1.2;
+  }
+  .close{
+      float:right;
+      cursor:pointer;
+      font-size:24px;
+  }
+  /* 再生ボタンと停止ボタン */
+  button{
+      margin:5px;
+      padding:8px 16px;
+  }
+  /* 音量スライドバー用 */
+  input[type="range"]{
+      width:200px;
+  }
+  /* ビデオ再生用 */
+     /* ポップの背景 */
+    .modal-content-v {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        width: 90%;
+        max-width: 800px;
+        background: white;
+        padding: 10px;
+        border-radius: 10px;      
+    }
+     /* 閉じるボタン */
+    .close-v {
+        position: absolute;
+        right: 15px;
+        top: 10px;
+        font-size: 30px;
+        cursor: pointer;
+        color: red; /* 色名で指定 */
+    }
+    
+    video {
+        width: 100%;
+        height: auto;
+    }
+ /* 一口メモ用 */
+    .popup{
+      display:none;
+      position:fixed;
+      left:0;
+      top:0;
+      width:100%;
+      height:100%;
+      background:rgba(0,0,0,0.5);
+    }
+    .popup-content{
+      background:white;
+      width:90%;
+      height:30%;
+    
+      display:flex;
+      align-items:center;      /* 高さ方向中央 */
+      justify-content:center;  /* 横方向中央 */
+    
+      position:absolute;
+      left:50%;
+      top:50%;
+      transform:translate(-50%, -50%);
+      padding:20px;
+      border-radius:10px;
+      box-sizing:border-box;
+    }
+    #closeBtn{
+        position:absolute;
+        top:10px;
+        right:15px;
+        font-size:30px;
+        font-weight:bold;
+        cursor:pointer;
+        line-height:1;
+    }
+    #playBtn{
+      position:absolute;
+      left:50%;
+      top:50%;
+      transform:translate(-50%, -50%);
+  
+      background:rgba(255,255,255,0.8);
+  
+      border:none;
+      border-radius:50%;
+  
+      width:80px;
+      height:80px;
+
+      box-shadow:0 2px 8px rgba(0,0,0,0.3);
+      
+      font-size:32px;
+      cursor:pointer;
+    }
+    .popup-body{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:20px;
+      /* margin-top:30px; */
+    }
+    
+    .left-image{
+      height:auto;
+      width:100%;
+    }
+    .left-image-container{
+      flex:7;
+      position:relative;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+    }
+    .right-area{
+      flex:1;  /* 右を狭く */
+    }
+    .avatar{
+      width:120px;
+      height:auto;
+      object-fit:contain;
+      cursor:pointer;
+     }  
+ </style>
+ <body>
+  <nav>
+    <ul>
+    <li class=”current”><a href="home.html">ホーム</a></li>
+    <li><a href='stampnote.html'>スタンプ帳</a></li>
+    <li><a href='spotlist.html'>リスト</a></li>
+   <!-- <li><a href=”#”>Blog</a></li> -->
+    </ul>
+   </nav>
+   <div class="page-title">スポットの詳細</div>
+  <table border="1" >
+    <tbody>
+      <tr>
+        <!-- <td><img id="image1" width="100%" class="table-img"></td> -->
+        <td colspan="3"><img id="image2" width="100%" class="table-img"></td>
+        <!-- <td><img id="image3" width="100%" class="table-img"></td> -->
+      </tr> 
+      <tr>
+        <td id="title" colspan="3" class="table-text"></td>
+      </tr>
+      <tr>
+        <td id="address" colspan="3" class="table-text"></td>
+      </tr>
+      <tr>
+        <td id="address_detail" colspan="3" class="table-text"></td>
+      </tr>
+      <tr>
+        <td id="era" colspan="3" class="table-text"></td>
+      </tr>
+    </tbody>
+  </table>
+  <p class="image-container">
+     <!-- <img src="icon/voice-button.png" onclick="openModal()" width="10%" alt="音声ガイド" > -->
+     <!-- <img src="icon/video-button.png" onclick="openVideo()" width="10%" alt="ビデオ再生" > -->
+    <img id="voice-button" onclick="openModal()" width="10%" alt="" > 
+    <img id="video-button" onclick="openVideo()" width="10%" alt="" >
+    <img id="noteBtn" width="10%" alt="" >
+  </p>
+
+  
+   <!-- 音声再生用ポップアップ -->
+  <div id="audioModal" class="modal">
+      <div class="modal-content">
+          <span class="close" onclick="closeModal()">&times;</span>
+          <audio id="audio"></audio>
+          <div>
+              <button onclick="playAudio()">▶<br>再生</button>
+              <button onclick="pauseAudio()">⏸<br>一時停止</button>
+              <button onclick="stopAudio()">■<br>停止</button>
+          </div>
+          <br>
+          <div>
+              <label>音量：</label>
+              <input type="range"
+                    id="volumeSlider"
+                    min="0"
+                    max="100"
+                    value="60"
+                    oninput="setVolume(this.value)">
+              <span id="volumeValue">60%</span>
+          </div>
+      </div>
+  </div>
+
+<!-- ビデオ再生用ポップアップ -->
+<div id="videoModal" class="modal">
+    <div class="modal-content-v">
+        <span class="close-v" onclick="closeVideo()">&times;</span>
+
+        <video id="myVideo" controls>
+        </video>
+
+    </div>
+</div>
+<!-- 一口メモ用 -->
+  <!-- ポップアップ -->
+  <div id="notePopup" class="popup">
+      <div class="popup-content">
+        <span id="closeBtn">×</span>
+        <div class="popup-body">
+          <div class="left-image-container">
+            <img id="noteImage" class="left-image" alt="説明画像">
+            <button id="playBtn">▶</button>
+          </div>
+          <!-- 右側のアバター -->
+          <div class="right-area">
+            <img
+              id="avatar"
+              src="icon/avatar_close.png"
+              class="avatar"
+            >
+            <audio id="noteAudio">
+              <source src="note/01_note.mp3" type="audio/mpeg">
+            </audio>
+              <br>
+          </div>
+        </div>
+  　　</div>
+  </div>
+  <!-- 説明文 -->
+  <div class="explanation">
+    <p id="explain" ></p> 
+  </div> 
+  <p class="img-tomap">
+     <img id="tomap" onclick="jump_to_checkin()" width="20%" alt="地図へ" >
+  </p>
+  <script>
+      //ローカルストレージからデータ（タイトル、画像ファイル名、住所、場所の詳細、年代、説明、訪問の有無）の取り出し
+      if (window.localStorage){
+        //エリア番号の読み取り
+        let area_no=localStorage.getItem('area_no%');
+        //ローカルストレージからキー「selected-spot%地域番号」で基礎データを読み込み配列arrayに格納
+        let key_select="selected_spot%" + area_no
+        let json=localStorage.getItem(key_select); //ローカルストレージからキー「selected-spot%地域番号」で保存したデータを取得
+        let spot_array=JSON.parse(json);  //取得したJSONデータを配列に変換し、配列名をspot_array（任意）とする
+        var [s_id,s_lat,s_lng,s_title,s_img,s_address,s_address_detail,s_era,s_explanation,s_yesno,s_flag]=spot_array; //配列の要素を変数に代入
+        //高解像度の画像ある場合は、これを表示する。
+        const str=s_img;
+        const split_str=str.split(".");
+        //var file_name1=str;
+        var file_name2=split_str[0] + "_high." + split_str[1];
+        var e_img=document.getElementById("image2");
+        e_img.onerror = function(){this.src = 'image/' + s_img;
+        };
+        e_img.src='image/' + file_name2 ;//高解像の画像ファイルを更新
+        var e_title=document.getElementById("title");e_title.textContent="名称：" + s_title ; //名称の更新
+        var e_address=document.getElementById("address");e_address.textContent="住所：" + s_address ; //住所の更新
+        var e_address_detail=document.getElementById("address_detail");e_address_detail.textContent="場所の詳細：" + s_address_detail ; //場所の詳細の更新  
+        var e_era=document.getElementById("era");e_era.textContent="年代：" + s_era  ;//年代を更新
+        var e_explanation=document.getElementById("explain");e_explanation.textContent= s_explanation  ;//説明を更新
+      } else {
+        alert('ローカルストレージは使えません')
+      };
+        var tomap_img=document.getElementById("tomap");
+        tomap_img.src='icon/map-button.png'; 
+        //マップボタンを押したら呼び出される関数
+        function jump_to_checkin(){
+          //遷移するページのURLの後にスポットの経緯度と現在地の経緯度を付ける
+          if(s_flag==1){
+            //チェックインのページから詳細ページにアクセスした場合
+            history.back ();
+          }else{
+            //スポットリストあるいはスタンプ帳のページから詳細ページにアクセスした場合
+            var clat=s_lat;
+            var clng=s_lng;
+            var url= "checkin.html?lat=" + s_lat + "&lng=" + s_lng + "&clat=" + clat + "&clng=" + clng ;
+            //alert(url);
+            window.location.href=url;
+          }
+        }
+        /* 以下は音声ガイド用 */
+        const audiomodal = document.getElementById("audioModal");
+        const audio = document.getElementById("audio");
+        document.getElementById("voice-button").src ="icon/voice-button.png"
+        if(s_id<10){
+          audio.src="guide/" + "0" + s_id + "_voice.mp3";
+        }else{
+           audio.src="guide/" + s_id + "_voice.mp3";
+        }
+        function openModal(){
+            audio.volume = 0.6;  //初期音量60%
+            const slider = document.getElementById("volumeSlider");
+            slider.value = 60;
+            document.getElementById("volumeValue").textContent = "60%";
+
+            audiomodal.style.display = "block";
+        }
+
+        function closeModal(){
+            audio.pause();
+            audio.currentTime = 0;
+            audiomodal.style.display = "none";
+        }
+
+        function playAudio(){
+            audio.play();
+        }
+        function pauseAudio(){
+            audio.pause();
+        }
+        function stopAudio(){
+            audio.pause();
+            audio.currentTime = 0;
+        }
+
+        function setVolume(value){
+            audio.volume = value / 100;
+            document.getElementById("volumeValue").textContent = value + "%";
+        }
+
+        /* 背景クリックで閉じる (音声再生とビデオ再生共通)*/
+        // window.onclick = function(event){
+        //     if(event.target == audioModal){
+        //         closeModal();
+        //     }
+        //     if(event.target == videoModal){
+        //         closeVideo();
+        //     }
+        // }
+    //ビデオ再生
+            const videomodal = document.getElementById("videoModal");
+            const video = document.getElementById("myVideo");
+            if(s_id<10){
+              video.src="video/" + "0" + s_id + "_video.mp4";
+            }else{
+              video.src="video/" + s_id + "_video.mp4";
+            }
+            //ビデオ再生ボタンを表示する
+            document.getElementById("video-button").src ="icon/video-button.png"
+            //再生するビデオがない場合はビデオ再生ボタンを非表示にする
+            video.onerror = function(){
+              document.getElementById("video-button").style.display="none";
+            }
+            function openVideo() {
+            videomodal.style.display = "block";
+            video.play();
+        }
+        
+        function closeVideo() {
+        
+            video.pause();
+            video.currentTime = 0;
+        
+            videomodal.style.display = "none";
+        }
+    //一口メモ
+      const popup = document.getElementById("notePopup");
+      const noteBtn = document.getElementById("noteBtn");
+      const closeBtn = document.getElementById("closeBtn");
+      const noteaudio = document.getElementById("noteAudio");
+      const playBtn = document.getElementById("playBtn");
+      const avatar = document.getElementById("avatar");
+      let mouthAnimation;
+      //1～15の整数乱数を発生（15パターン用意した「防災一口メモ」の中で、表示するものを乱数で発生させる）
+      const noteNo = Math.floor(Math.random() * 15) + 1;
+      // 01～15形式に変換
+      const noteStr = String(noteNo).padStart(2, "0");
+      // 画像ファイル設定
+      document.getElementById("noteImage").src = "note/" + noteStr + "_note.png";
+      // 音声ファイル設定
+      noteaudio.src = "note/" + noteStr + "_note.mp3";
+      //
+      noteBtn.src ="icon/note-button.png"
+      noteBtn.onclick = () => {
+          popup.style.display = "block";
+          playBtn.style.display = "block";
+      };
+      closeBtn.onclick = () => {
+          popup.style.display = "none";
+          noteaudio.pause();
+          noteaudio.currentTime = 0;
+          clearInterval(mouthAnimation);
+          avatar.src = "icon/avatar_close.png";
+      };
+      playBtn.onclick = playNoteAudio;
+      avatar.onclick = playNoteAudio;
+      noteaudio.addEventListener("ended", () => {
+          clearInterval(mouthAnimation);
+          mouthAnimation = null;
+          avatar.src = "icon/avatar_close.png";
+          playBtn.style.display = "block";
+      });
+      function playNoteAudio(){
+        if(!noteaudio.paused) return;
+        playBtn.style.display = "none";
+        noteaudio.play();
+        clearInterval(mouthAnimation);
+        mouthAnimation = setInterval(() => {
+            if (avatar.src.includes("icon/avatar_close.png")) {
+                avatar.src = "icon/avatar_open.png";
+            } else {
+                avatar.src = "icon/avatar_close.png";
+            }
+        }, 200);
+      }
+    </script>
+</body>
+</html>
+
+

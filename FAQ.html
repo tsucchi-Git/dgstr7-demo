@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel='stylesheet' href='css/menu.css'/>
+  <title>FAQ</title>
+</head>
+<style>
+    body {
+      font-family: Arial, sans-serif;
+      line-height: 1.6;
+      margin: 20px;
+      background-color: #f9f9f9;
+    }
+
+    .faq-container {
+      max-width: 600px;
+      margin: 0 auto;
+      background: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .faq-item {
+      margin-bottom: 15px;
+      border-bottom: 1px solid #ddd;
+    }
+
+    .faq-question {
+      background: none;
+      border: none;
+      color: #333;
+      font-size: 18px;
+      text-align: left;
+      padding: 10px;
+      width: 100%;
+      cursor: pointer;
+      outline: none;
+    }
+
+    .faq-question:hover {
+      color: #007BFF;
+    }
+
+    .faq-answer {
+      display: none;
+      padding: 10px;
+      color: #555;
+      background-color: #f1f1f1;
+      border-radius: 4px;
+      margin-top: 5px;
+    }
+    .contact1{
+      text-align:center;
+      margin:20pt;
+      text-decoration: underline;
+    }
+    .contact2{
+      margin-left:20px;
+      font-size:13px;
+    }
+    img.text{
+      height:18px;
+    }
+</style>
+<body>
+    <nav>
+      <ul>
+      <li class=”current”><a href='home.html'>ホーム</a></li>
+      <li><a href='howtoplay.html'>遊び方</a></li>
+      <li><a href='kiyaku.html'>利用規約</a></li>
+      <!-- <li><a href=”#”>Blog</a></li> -->
+      </ul>
+     </nav>
+     <div class="faq-container">
+      <h1>FAQ（よくある質問）</h1>
+      <div class="faq-item">
+        <button class="faq-question">Q1: 無料参加できますか？</button>
+        <div class="faq-answer">
+          無料で参加できます。ただし、スマートフォンのパケット通信料は自己負担でお願いします。
+        </div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question">Q2: 事前登録は必要ですか？</button>
+        <div class="faq-answer">
+          事前登録の必要はありません。したがって、IDやパスワードも必要ありません。
+        </div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question">Q3: 個人情報は大丈夫ですか？</button>
+        <div class="faq-answer">
+          事前登録の必要がなく、アプリ内で個人情報は扱いません。
+        </div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question">Q4: 現在地を取得できません。</button>
+        <div class="faq-answer">
+          このサイトに対して、位置情報サービス（GPS）が無効になっている可能性があります。つぎのような対応をお試しください。<br>
+          １）AndroidデバイスでChrome<img src="icon/chrome.png" class="text">をブラウザとして使っている場合<br>
+          　１．このサイトに移動します。<br>
+          　２．アドレスバーの左側で、サイト情報を表示させる<img src="icon/pagelink.png" class="text">をタップします。次に [権限] をタップします。<br>
+          　３．位置情報をオンにします。<br>
+          ２）iPhoneデバイスでSafari<img src="icon/safari.png" class="text">をブラウザとして使っている場合<br>
+          　１．このサイトに移動します。<br>
+          　２．アドレスバーの左側で、サイト情報を表示させる<img src="icon/pagelink_safari1.png" class="text"> （バージョンによって、<img src="icon/pagelink_safari2.png" class="text">など異なります。） をタップします。<br>
+          　３．三点メニュー[・・・]をタップします。（バージョンにょっては、[Webサイトの設定]をタップします。）<br>
+          　４．[位置情報]をタップします。<br>
+          　５．[許可]をタップします。<br>
+          ３）iPhoneデバイスでChrome<img src="icon/chrome.png" class="text">をブラウザとして使っている場合<br>
+          　１．一旦、このサイトを終了します。<br>
+          　２．iPhoneのセッティングアイコン<img src="icon/iphone_setting.png" class="text">をタップします。<br>
+          　３．設定から[アプリ]をタップします。<br>
+          　４．アプリからChrome<img src="icon/chrome.png" class="text">をタップします。<br>
+          　５．[位置情報]をタップします。<br>
+          　６．[このアプリの使用中]をタップします。<br>
+          　７．Chrome<img src="icon/chrome.png" class="text">の設定を終了し、改めてこのサイトに移動します。<br>
+          ※Androidデバイス、iPhoneデバイスともにバージョンによって設定方法が異なることもあります。
+        </div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question">Q5: チェックインできません。</button>
+        <div class="faq-answer">
+          １）距離が離れすぎている。<br>
+          　スマートフォン等の機種によっては、位置情報サービス（GPS）の座標が大きくずれていることがあります。<span id="underline">また、お手持ちのスマートフォンの位置情報のぶれ（変動）によって、チェックインに時間を要する場合があります。</span><br>　スポットまでの距離が表示されるので、これも参考にしてください。<br>
+          ２）GPSが有効になっていない。<br>
+          　お使いのスマートフォンで、位置情報サービスがオフになっている可能性があります。スマートフォンの位置情報サービスが有効になっているか確認してください。位置情報サービスを有効にする方法は、Q4を参照してください。
+        </div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question">Q6: 同じチェックインポイントで何度でもチェックインできますか？</button>
+        <div class="faq-answer">
+          同じチェックインポイントでチェックインできるのは1回だけです。
+        </div>
+      </div>      
+      <div class="faq-item">
+        <button class="faq-question">Q7: 駐車場はありますか？</button>
+        <div class="faq-answer">
+          駐車場はありません。徒歩でまわっても３０分程度です。ルールやマナーをお守りいただき、安全に訪問してください。
+        </div>
+      </div>      
+      <div class="faq-item">
+        <button class="faq-question">Q8: スタンプは、これをゲットした次の日以降も有効ですか？</button>
+        <div class="faq-answer">
+          　有効です。スタンプ帳には、別の日にゲットしたスタンプも反映されます。<br>　ただし、Safariをブラウザとして利用している場合、ブラウザの仕様で、サイトにアクセス後７日間ユーザーの操作がない場合、保存したデータが削除されてしまう可能性があります。その場合、獲得したスタンプが消えてしまい、復活できません。ご留意ください。スタンプ帳を適宜スクリーンショットして保存しておくことをお勧めします。
+        </div>
+      </div>      
+      <div class="faq-item">
+        <button class="faq-question">Q9: スマートフォンの機種を途中で変更しても、それまでにゲットしたスタンプは有効ですか？</button>
+        <div class="faq-answer">
+          無効です。スマートフォンを変更すると、それまでにゲットしたスタンプは反映されません。同じスマートフォンをお使いください。
+        </div>
+      </div>      
+      <div class="faq-item">
+        <button class="faq-question">Q10: 同じスマートフォンですが、使用するブラウザを途中で変更しても、それまでにゲットしたスタンプは有効ですか？</button>
+        <div class="faq-answer">
+          無効です。同じスマートフォンを利用していても、ブラウザを変更すると、それまでにゲットしたスタンプは反映されません。同じブラウザでお使いください。（例：途中からMicrosoft EdgeからGoogle Chromeへの変更はNG）
+        </div>
+      </div>      
+      <div class="faq-item">
+        <button class="faq-question">Q11: ブラウザの機能において、「閲覧履歴データの削除」(Google Chromeの場合）や「履歴とWebサイトデータを消去」(Apple Safariの場合）を行うと、なぜ獲得したスタンプが消去されてしまいますか？</button>
+        <div class="faq-answer">
+          このアプリケーションは、ブラウザのストレージ機能を使っています。したがって、このWebサイトに関するデータが削除されると、ストレージがリセットされてしまうためです。
+        </div>
+      </div>      
+      <div class="faq-item">
+        <button class="faq-question">Q12: 古いスマートフォンで参加できますか？</button>
+        <div class="faq-answer">
+          お試しいただくしかありません。
+        </div>
+      </div>      
+      <div class="faq-item">
+        <button class="faq-question">Q13: 何回でも参加できますか？</button>
+        <div class="faq-answer">
+          景品の進呈は、参加者お一人様（スマートフォン１台）あたり、1回に限らせていただきます。ただし、数に限りがあります。また引き換えの期限にも留意してください。
+        </div>
+      </div>      
+      <div class="faq-item">
+        <button class="faq-question">Q14: 景品は、どこでもらえますか？</button>
+        <div class="faq-answer">
+        　洞川地蔵等のスポット6か所を巡り、スマホで黄色のみかん6個を集めた方(吹井区区民とその別居家族)で、先着100名様に由良町指定ごみ袋(500円分)をプレゼントします。<br>　景品の引換えは、スマホ1台につき１回限りです。岩崎商店でスマホのスタンプ帳の画面を提示のうえ、お名前をご記入いただき、お受け取り下さい。<br>　さらに、本「ぼうさい散歩」と防災研修会(１０月末～１１月中旬開催予定)の両方に参加された方を対象に、研修会当日の抽選会で平佐館お食事券(５,０００円分)を１０名様にプレゼントします。
+        </div>
+      </div>
+    </div>
+    <!-- <div class="contact1">その他のお問い合わせに関しては、E-mailで連絡してください。</div>
+    <p class="contact2">E-mailアドレス：坂口さんのメールアドレス？</p>
+    <p class="contact2">件名：スタンプラリー</p> -->
+</body>
+<script>
+      //文中の一部のテキストにアンダーライン
+    const target = document.getElementById('underline');
+    target.style.textDecoration = 'underline';
+    var items = document.querySelectorAll('.faq-question')
+    items.forEach(function (question) {
+      question.addEventListener('click', function () {
+        const answer = this.nextElementSibling;
+
+        if (answer.style.display === 'block') {
+          answer.style.display = 'none';
+        } else {
+          answer.style.display = 'block';
+        }
+      });
+    });
+</script>
+
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

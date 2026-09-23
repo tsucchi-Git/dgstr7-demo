@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>お知らせ-吹井ぼうさい散歩デジタルスランプラリー-</title>
+</head>
+<style>
+ body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    margin: 20px;
+    background-color: #f9f9f9;
+  }
+  .image_top{
+    text-align: center;
+  }
+  .warning{
+    text-align: center;
+  }
+  button{
+    cursor: pointer; /* カーソル変更 */ 
+  }
+  .rally_start{
+    text-align:center;
+    margin-top:10px;
+    margin-bottom:15px;
+  }
+  .faq-container {
+    max-width: 600px;
+    margin: 0 auto;
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+
+  .faq-item {
+    margin-bottom: 15px;
+    border-bottom: 1px solid #ddd;
+  }
+
+  .faq-question {
+    background: none;
+    border: none;
+    color: #333;
+    font-size: 18px;
+    text-align: left;
+    padding: 10px;
+    width: 100%;
+    cursor: pointer;
+    outline: none;
+    font-size:10px;
+  }
+
+  .faq-question:hover {
+    color: #007BFF;
+  }
+
+  .faq-answer {
+    display: none;
+    padding: 10px;
+    color: #555;
+    background-color: #f1f1f1;
+    border-radius: 4px;
+    margin-top: 5px;
+    font-size:10px;
+  }
+  .rally_start img { 
+    animation: anime1 0.5s ease 0s infinite alternate;
+    transform-origin:center;
+    margin:auto;
+  }
+  .important {
+    color:red;
+  }
+  .image-container {
+  position: absolute;
+  top:10px;
+  width:80%;
+  left:10%;
+  display: inline-block;
+}
+
+.image-container img {
+  display: block;
+  width: 100%; /* 必要に応じて調整 */
+  height: auto;
+}
+
+.close-button {
+  position: absolute;
+  top: -10px; /* 画像の右上に配置 */
+  right: -10px;
+  background-color: red;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.8; /* 半透明 */
+}
+
+.close-button:hover {
+  background-color: darkred;
+}
+  @keyframes anime1 {
+    from {
+      transform: scale(0.9,0.9);
+    }
+    to {
+      transform: scale(1,1);
+    }
+  }
+</style>
+<body>
+    <div>
+      <img src="icon/image_top.png" width="100%"  class="image_top" alt="トップ画像" >
+    </div>
+    <div class="image-container">
+      <img id="warning" src="icon/warning.png" alt="Sample Image">
+      <button id="close-button" class="close-button">×</button>
+    </div>
+    <div class="rally_start" style="text-align: center;">
+      <img src="icon/rally_start.png" id="start_button" width="60%" alt="スタ－トボタン">
+      <img src="icon/rally_wait.png" id="wait_button" width="60%" alt="ウェイトボタン">
+    </div>
+    <div class="faq-container" id="announce">
+      <h3>
+        <img src="icon/megaphone.png" width=10% >　お知らせ
+      </h3>
+      <div class="faq-item">
+        <button class="faq-question">2026.9.1: <span class="important">重要なお知らせ</span></button>
+        <div class="faq-answer" id="important">
+          　このアプリケーションは、ブラウザのストレージ機能を利用しています。ブラウザの設定において、閲覧履歴データを削除する場合、つぎの点に留意して下さい。<br>
+          1)Google Chromeを利用する場合<br>
+          　「閲覧履歴データを削除」を行うと、獲得したスタンプは破棄され復元できません。<br>
+          2)Apple Safariを利用する場合<br>
+          　「履歴とWebサイトデータを消去」を行うと、獲得したスタンプは破棄され復元できません。<br>
+          3)プライベートモードやシークレットモードなどでの利用<br>
+            　ブラウザによってはプライベートモードやシークレットモードの設定がありますが、そのモードでは正しく動作しません。<br>
+        </div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question">2026.9.1: 景品について</button>
+        <div class="faq-answer">
+          　洞川地蔵等のスポット6か所を巡り、スマホで黄色のみかん6個を集めた方(吹井区区民とその別居家族)で、先着100名様に由良町指定ごみ袋(500円分)をプレゼントします。景品の引換えは、スマホ1台につき１回限りです。<br>　岩崎商店でスマホのスタンプ帳の画面を提示のうえ、お名前をご記入いただき、お受け取り下さい。<br>　さらに、本「ぼうさい散歩」と防災研修会(１０月末～１１月中旬開催予定)の両方に参加された方を対象に、研修会当日の抽選会で平佐館お食事券(５,０００円分)を１０名様にプレゼントします。どうぞお楽しみに!!<br>
+        </div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question">2026.9.1: 利用規約承諾について</button>
+        <div class="faq-answer">
+          　初めてお使いになる場合は、利用規約をお読みいただき、これに同意していただく必要があります。「スタンプラリーをはじめる」のボタンをタップすると、利用規約が表示されます。
+        </div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question">2026.9.1 ブックマークのお願い</button>
+        <div class="faq-answer">
+          ・このページをブックマークしていただくと、つぎの利用時に便利です。<br>
+          ・ブックマークしていない場合、https://fukei-yura.sakura.ne.jp/dgstr7/からアクセスすることもできます。
+        </div>
+      </div>
+   </div>
+</body>
+<script>
+      //重要な知らせを赤字にする
+      const target=document.getElementById('important');
+      target.style.color="red";
+      //開始の前日の指定
+      const specificDate=new Date('2025-09-08');
+      //今日の日付取得
+      const today = new Date();
+      //alert(specificDate + ',' + today);
+      //日付の判定処理
+      if(today > specificDate){
+            var start=document.getElementById("start_button");
+            //スタートボタンを表示にする
+            start.style.display="block";
+            //スタートボタン画像にクリックイベントを付加
+            start.addEventListener('click', function(event){
+              location.href="home.html";
+            });
+            //ウェイトボタンを非表示にする
+            document.getElementById("wait_button").style.display="none";
+            //お知らせを表示にする
+            document.getElementById("announce").style.display="block"; 
+            var items = document.querySelectorAll('.faq-question')
+            items.forEach(function (question) {
+              question.addEventListener('click', function () {
+                const answer = this.nextElementSibling;
+                if (answer.style.display === 'block') {
+                  answer.style.display = 'none';
+                } else {
+                  answer.style.display = 'block';
+                }
+              });
+            });
+            //ブラウザの判別→Safariの場合に警告文を出す
+            var agent = window.navigator.userAgent.toLowerCase();
+            if(agent.indexOf('msie') > -1) {
+              browser1();
+            } else if(agent.indexOf('edg') > -1) {
+              browser1();
+            } else if(agent.indexOf('chrome') > -1) {
+              browser1();
+            } else if(agent.indexOf('safari') > -1) {
+              browser2();
+            } else if(agent.indexOf('firefox') > -1) {
+              browser1();
+            } else {
+              browser1();
+            };
+        } else {
+        //ウェイトボタンを表示にする
+       document.getElementById("wait_button").style.display="block";
+        //スタートボタンを非表示にする
+        document.getElementById("start_button").style.display="none";
+        //お知らせを非表示にする
+        document.getElementById("announce").style.display="none";
+      }        
+      //alert('新たなお知らせはありません。');
+    //ブラウザがSafari以外の場合の処理
+    function browser1(){
+        document.getElementById("warning").style.display="none";
+        document.getElementById("close-button").style.display="none";
+        document.getElementById("start_button").style.display="block";
+    }
+    //ブラウザがSafariの場合の処理
+    function browser2(){
+        document.getElementById("warning").style.display="block";
+        document.getElementById("close-button").style.display="block";
+        document.getElementById("start_button").style.display="none"; 
+        //スクロール禁止にする
+        //document.documentElement.style.overflow = "hidden";
+        //「×」ボタンがクリックされたらダイアログを閉じる
+        var cbutton=document.getElementById("close-button");
+          cbutton.addEventListener('click', function () {
+            //document.documentElement.style.overflow = "visible";
+            document.getElementById("warning").remove();
+            cbutton.remove();
+            document.getElementById("start_button").style.display="block"; 
+        });    
+    }
+</script>
+
+</html>
+
+
+
+
+
+
+
+
