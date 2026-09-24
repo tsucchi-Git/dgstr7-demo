@@ -306,7 +306,8 @@
             // L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png', {
             //       attribution: "<a href='https://maps.gsi.go.jp/development/ichiran.html' target='_blank'>地理院タイル</a>"
             //   }).addTo(mymap);
-            mymap.locate({setView: false, maxZoom: 16, timeout: 20000}); 
+            // Leafletのlocate()は現在地取得の本体には使用しない。
+            // iPhone/Safariでは、Geolocation APIを直接watchPosition()で監視する。
             //地図の表示範囲を設定する（スポットと現在位置のマーカーがすべて表示される）関数の呼び出し
             MapDisplayBoundCheckin(latitude,longitude,curlatitude,curlongitude);         
             //マップにスポットのマーカーをつける
@@ -339,7 +340,9 @@
               dist.style.animationPlayState = "paused";  //アニメーションの一時停止
               dist.style.backgroundColor="lightgray"; //背景色を指定
               //現在位置の連続監視
-              watch_id = navigator.geolocation.watchPosition(successCallback);//,errorCallback,position_options);  
+              // iPhone/Safariでは初回測位に時間がかかることがあるため、
+              // 高精度・長めのタイムアウト・キャッシュを使わない設定にする。
+              startGeolocation();
             }else{
               //
               var dist=document.getElementById("markerDistance");
@@ -348,13 +351,109 @@
               dist.style.backgroundColor="magenta"; //背景色を指定
             }
         } 
-       //常時監視中、現在位置の取得が成功したときの処理           
+       // iPhone/Safari向けの位置情報取得設定
+        var position_options = {
+            enableHighAccuracy: true,
+            timeout: 30000,
+            maximumAge: 0
+        };
+        var lastPosition = null;
+        var bestAccuracy = Infinity;
+        var geoRetryTimer = null;
+        var geoStarting = false;
+
+        // 初回測位はgetCurrentPosition()で取得し、その後watchPosition()で継続更新する。
+        function startGeolocation() {
+            if (!navigator.geolocation) {
+                showGeoError("この端末では位置情報を取得できません。");
+                return;
+            }
+            if (geoStarting) return;
+            geoStarting = true;
+
+            navigator.geolocation.getCurrentPosition(
+                function(position) {
+                    geoStarting = false;
+                    successCallback(position);
+                    startPositionWatch();
+                },
+                function(error) {
+                    geoStarting = false;
+                    handleGeoError(error);
+                    if (error.code !== 1) scheduleGeoRetry();
+                    startPositionWatch();
+                },
+                position_options
+            );
+        }
+
+        function startPositionWatch() {
+            if (watch_id !== undefined && watch_id !== null) {
+                navigator.geolocation.clearWatch(watch_id);
+            }
+            watch_id = navigator.geolocation.watchPosition(
+                successCallback,
+                handleGeoError,
+                position_options
+            );
+        }
+
+        function scheduleGeoRetry() {
+            if (geoRetryTimer !== null) return;
+            geoRetryTimer = setTimeout(function() {
+                geoRetryTimer = null;
+                startGeolocation();
+            }, 3000);
+        }
+
+        function handleGeoError(error) {
+            if (error.code === 1) {
+                showGeoError("位置情報が許可されていません。iPhoneの「設定 → プライバシーとセキュリティ → 位置情報サービス」でSafariの位置情報を「許可」にし、「正確な位置情報」もONにしてください。");
+            } else if (error.code === 2) {
+                showGeoError("現在地を取得中です。GPSを受信しやすい場所で、そのまま少しお待ちください。");
+                scheduleGeoRetry();
+            } else if (error.code === 3) {
+                showGeoError("現在地の取得に時間がかかっています。GPSを再取得しています。");
+                scheduleGeoRetry();
+            } else {
+                showGeoError("現在地を取得しています。少しお待ちください。");
+                scheduleGeoRetry();
+            }
+        }
+
+        function showGeoError(message) {
+            var dist = document.getElementById("markerDistance");
+            if (!dist) return;
+            dist.style.marginTop = "20px";
+            dist.style.border = "solid 2px black";
+            dist.style.textAlign = "center";
+            dist.style.fontSize = "10pt";
+            dist.style.color = "black";
+            dist.style.backgroundColor = "lightgray";
+            dist.textContent = message;
+        }
+
+        // 常時監視中、現在位置の取得が成功したときの処理
         function successCallback(position) {
-            var Curlat=Number(position.coords.latitude);
-            var Curlng=Number(position.coords.longitude);
-            //alert(position.coords.latitude+','+ position.coords.longitude);
+            if (!position || !position.coords) return;
+
+            var Curlat = Number(position.coords.latitude);
+            var Curlng = Number(position.coords.longitude);
+            var accuracy = Number(position.coords.accuracy);
+
+            if (!Number.isFinite(Curlat) || !Number.isFinite(Curlng)) return;
+
+            if (geoRetryTimer !== null) {
+                clearTimeout(geoRetryTimer);
+                geoRetryTimer = null;
+            }
+            lastPosition = position;
+            if (Number.isFinite(accuracy) && accuracy > 0 && accuracy < bestAccuracy) {
+                bestAccuracy = accuracy;
+            }
+
             var r=distance(longitude, latitude,Curlng,Curlat);  //現在地から対象地点までの距離(m)
-            //現在位置の移動に伴って地図をスライドさせる
+//現在位置の移動に伴って地図をスライドさせる
             // if(Curlng>=lng_max){lng_max =Number(lng_max)+0.01;lng_min =Number(lng_min)+0.01;const bounds = L.latLngBounds([lat_min,lng_min],[lat_max,lng_max]);mymap.fitBounds(bounds)};
             // if(Curlng<lng_min){lng_min =Number(lng_min)-0.01;lng_max=Number(lng_max)-0.01;const bounds = L.latLngBounds([lat_min,lng_min],[lat_max,lng_max]);mymap.fitBounds(bounds)};
             // if(Curlat>=lat_max){lat_max =Number(lat_max)+0.01;lat_min =Number(lat_min)+0.01;const bounds = L.latLngBounds([lat_min,lng_min],[lat_max,lng_max]);mymap.fitBounds(bounds)};
@@ -373,7 +472,7 @@
             if(Math.round(r)>checkin_distance)  //チェックインの範囲を指定
               { 
                 //対象地点のチェックイン可能範囲の外側にいる場合の処理
-                dist.textContent='ここからの距離：'+  Math.round(r) +'m ←もっと近づいてね！';
+                dist.textContent='ここからの距離：'+  Math.round(r) +'m ←もっと近づいてね！' + (Number.isFinite(accuracy) && accuracy > 0 ? '（GPS精度 約'+Math.round(accuracy)+'m）' : '');
                 dist.style.backgroundColor="white";    //背景色を指定
                 dist.style.border="solid 2px blue"; //境界線の太さと色を指定
                 dist.style.textAlign = "center";  //センタリング
@@ -385,7 +484,7 @@
               {
                 //対象地点のチェックイン可能範囲の内側にいる場合の処理
                 //文字ボタンの文字列とバックカラーなどを修正
-                dist.textContent='チェックインできます。ここをタップしてください。';
+                dist.textContent='チェックインできます。ここをタップしてください。' + (Number.isFinite(accuracy) && accuracy > 0 ? '（GPS精度 約'+Math.round(accuracy)+'m）' : '');
                 dist.style.border="solid 2px black";  //境界線の太さと色を指定
                 dist.style.backgroundColor="springgreen";    //背景色を指定
                 dist.style.textAlign = "center";      //センタリング
@@ -394,7 +493,7 @@
                 //文字ボタンにアニメーションを再開
                 dist.style.animationPlayState = "running";  
                 //文字ボタンをタップ可能にし、タップ後の処理を記述
-                dist.addEventListener('click',Stamp);
+                dist.onclick = Stamp;
                 }
           //チェックインの処理
             function Stamp() {
@@ -403,7 +502,7 @@
                     dist.style.backgroundColor="magenta"; //背景色を指定
                     dist.style.color="black";              //フォントの色を指定
                     //文字ボタンのオンクリック機能の削除
-                    dist.removeEventListener('click', Stamp)
+                    dist.onclick = null
                     //文字ボタンにアニメーションを停止
                     dist.style.animationPlayState = "paused";  
                     //現在地の連続監視機能を停止
@@ -432,12 +531,17 @@
                 }
         //２点間の距離の計算用関数
         function distance(x1, y1, x2, y2) {
-          const RR=Math.PI/180;
-          y1 *= RR;
-          x1 *= RR;
-          y2 *= RR;
-          x2 *= RR;
-          return 6371 * Math.acos(Math.cos(y1) * Math.cos(y2) * Math.cos(x2 - x1) + Math.sin(y1) * Math.sin(y2))*1000;
+          // Haversine公式を使用。acos()による丸め誤差でNaNになるケースを避ける。
+          const RR = Math.PI / 180;
+          const lat1 = Number(y1) * RR;
+          const lat2 = Number(y2) * RR;
+          const dLat = (Number(y2) - Number(y1)) * RR;
+          const dLng = (Number(x2) - Number(x1)) * RR;
+          const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                    Math.cos(lat1) * Math.cos(lat2) *
+                    Math.sin(dLng / 2) * Math.sin(dLng / 2);
+          const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(Math.max(0, 1 - a)));
+          return 6371000 * c;
         }
           //地図の表示範囲を設定する（スポットと現在位置のマーカーがすべて表示される）
           function MapDisplayBoundCheckin(lat1,lng1,lat2,lng2){
